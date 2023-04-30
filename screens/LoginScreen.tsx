@@ -1,7 +1,8 @@
-import {Button, KeyboardAvoidingView, StatusBar, Text, View} from "react-native";
+import {Button, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image} from "expo-image";
 import React, {useEffect, useState} from 'react';
 import {ResponseType, useAuthRequest} from "expo-auth-session";
-import axios from "axios";
+import {bgBlack, spotifyGreen} from "../colors";
 
 const discovery = {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
@@ -40,47 +41,91 @@ const LoginScreen = ({ navigation }) => {
         }
     }, [response]);
 
-    useEffect(() => {
-        if (token) {
-            axios("https://api.spotify.com/v1/me/top/tracks?time_range=short_term", {
-                method: "GET",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token,
-                },
-            })
-                .then((response) => {
-                    console.log(response)
-                })
-                .catch((error) => {
-                    console.log("error", error.message);
-                });
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (token) {
+    //         axios("https://api.spotify.com/v1/me/top/tracks?time_range=short_term", {
+    //             method: "GET",
+    //             headers: {
+    //                 Accept: "application/json",
+    //                 "Content-Type": "application/json",
+    //                 Authorization: "Bearer " + token,
+    //             },
+    //         })
+    //             .then((response) => {
+    //                 console.log(response)
+    //             })
+    //             .catch((error) => {
+    //                 console.log("error", error.message);
+    //             });
+    //     }
+    // }, []);
 
     return (
-        <KeyboardAvoidingView behavior="padding">
-            <StatusBar style="light" />
-            <Text
-                style={{
-                    fontSize: 30,
-                    fontWeight: "bold",
-                    color: "white",
-                    marginBottom: "20%",
-                }}
-            >
-                top song player
-            </Text>
-            <Button
-                title="Login with Spotify"
-                onPress={() => {
-                    promptAsync();
-                }}
-            />
+        <View style={styles.loginContainer}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.titleText}>Stats for</Text>
+                <Image style={styles.titleImage} source={require("../assets/Spotify_Logo_RGB_Green.png")} />
+            </View>
+            <Text style={styles.slogan}>A nice slogan to catch users attention</Text>
+            <Button title={"Log token"} onPress={() => console.log(token)}/>
+            <TouchableOpacity>
+                <View style={styles.loginButton}>
+                    <Text style={styles.loginText}>Login with</Text>
+                    <Image style={styles.loginImage} source={require("../assets/Spotify_Logo_RGB_White.png")} />
+                </View>
+            </TouchableOpacity>
             <View style={{ height: 100 }} />
-        </KeyboardAvoidingView>
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+    loginContainer: {
+        flex: 1,
+        backgroundColor: bgBlack,
+        alignItems: "center",
+        paddingTop: 190
+    },
+    titleContainer: {
+        flexDirection: "row",
+        gap: 6,
+        marginBottom: 80
+    },
+    titleText: {
+        paddingTop: 3,
+        fontSize: 24,
+        color: "white",
+        fontWeight: "600"
+    },
+    titleImage: {
+        resizeMode: "contain",
+        height: 37,
+        width: 121,
+    },
+    slogan: {
+        color: "white",
+        fontWeight: "500",
+        fontSize: 16,
+        marginBottom: 260
+    },
+    loginButton: {
+        flexDirection: "row",
+        backgroundColor: spotifyGreen,
+        paddingVertical: 15,
+        paddingHorizontal: 50,
+        borderRadius: 30,
+        gap: 6
+    },
+    loginText: {
+        color: "white",
+        fontWeight: "600",
+        fontSize: 16
+    },
+    loginImage: {
+        resizeMode: "contain",
+        height: 19,
+        width: 64,
+    }
+})
 
 export default LoginScreen

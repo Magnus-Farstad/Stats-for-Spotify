@@ -13,6 +13,7 @@
     "expo": "~48.0.10",
     "expo-auth-session": "~4.0.3",
     "expo-crypto": "~12.2.1",
+    "expo-image": "^1.2.1",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-native": "0.71.6",
