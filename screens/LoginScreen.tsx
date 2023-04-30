@@ -1,0 +1,86 @@
+import {Button, KeyboardAvoidingView, StatusBar, Text, View} from "react-native";
+import React, {useEffect, useState} from 'react';
+import {ResponseType, useAuthRequest} from "expo-auth-session";
+import axios from "axios";
+
+const discovery = {
+    authorizationEndpoint: "https://accounts.spotify.com/authorize",
+    tokenEndpoint: "https://accounts.spotify.com/api/token",
+};
+
+
+const LoginScreen = ({ navigation }) => {
+    const [token, setToken] = useState("");
+    const [request, response, promptAsync] = useAuthRequest(
+        {
+            responseType: ResponseType.Token,
+            clientId: "9f2b5df1f31849b49efc0f1fdf76aa1e",
+            scopes: [
+                "user-read-currently-playing",
+                "user-read-recently-played",
+                "user-read-playback-state",
+                "user-top-read",
+                "user-modify-playback-state",
+                "streaming",
+                "user-read-email",
+                "user-read-private",
+            ],
+            // In order to follow the "Authorization Code Flow" to fetch token after authorizationEndpoint
+            // this must be set to false
+            usePKCE: false,
+            redirectUri: "exp://192.168.10.105:19000",
+        },
+        discovery
+    );
+
+    useEffect(() => {
+        if (response?.type === "success") {
+            const { access_token } = response.params;
+            setToken(access_token);
+        }
+    }, [response]);
+
+    useEffect(() => {
+        if (token) {
+            axios("https://api.spotify.com/v1/me/top/tracks?time_range=short_term", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            })
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                    console.log("error", error.message);
+                });
+        }
+    }, []);
+
+    return (
+        <KeyboardAvoidingView behavior="padding">
+            <StatusBar style="light" />
+            <Text
+                style={{
+                    fontSize: 30,
+                    fontWeight: "bold",
+                    color: "white",
+                    marginBottom: "20%",
+                }}
+            >
+                top song player
+            </Text>
+            <Button
+                title="Login with Spotify"
+                onPress={() => {
+                    promptAsync();
+                }}
+            />
+            <View style={{ height: 100 }} />
+        </KeyboardAvoidingView>
+    );
+}
+
+export default LoginScreen
