@@ -109,6 +109,7 @@ const HomeScreen = () => {
                                 <AlbumCoverBig artist={item} position={index + 1} plays={100}/>
                             )}/>
                     </View>
+                    <Text style={[styles.mainStatText, styles.recentlyText]}>Recently played on Spotify</Text>
                 </View>
                 }
                 data={recentlyPlayed}
@@ -192,7 +193,10 @@ const styles = StyleSheet.create({
     secondaryStatContainer: {
         padding: 15,
         gap: 15,
-        marginBottom: 20
+        marginBottom: 10
+    },
+    recentlyText: {
+        padding: 15
     }
 })
 
