@@ -1,8 +1,9 @@
-import {Button, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Image} from "expo-image";
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {ResponseType, useAuthRequest} from "expo-auth-session";
 import {bgBlack, spotifyGreen} from "../colors";
+import {setAccessToken} from "../service/ApiService";
 
 const discovery = {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
@@ -11,7 +12,6 @@ const discovery = {
 
 
 const LoginScreen = ({ navigation }) => {
-    const [token, setToken] = useState("");
     const [request, response, promptAsync] = useAuthRequest(
         {
             responseType: ResponseType.Token,
@@ -34,10 +34,15 @@ const LoginScreen = ({ navigation }) => {
         discovery
     );
 
+    const login = () => {
+        promptAsync()
+    }
+
     useEffect(() => {
         if (response?.type === "success") {
             const { access_token } = response.params;
-            setToken(access_token);
+            setAccessToken(access_token)
+            navigation.replace("Home")
         }
     }, [response]);
 
@@ -67,8 +72,7 @@ const LoginScreen = ({ navigation }) => {
                 <Image style={styles.titleImage} source={require("../assets/Spotify_Logo_RGB_Green.png")} />
             </View>
             <Text style={styles.slogan}>A nice slogan to catch users attention</Text>
-            <Button title={"Log token"} onPress={() => console.log(token)}/>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => login()}>
                 <View style={styles.loginButton}>
                     <Text style={styles.loginText}>Login with</Text>
                     <Image style={styles.loginImage} source={require("../assets/Spotify_Logo_RGB_White.png")} />

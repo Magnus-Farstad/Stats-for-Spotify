@@ -15,7 +15,6 @@ export const getMe = () => {
     return (
         spotify.getMe()
             .then((result) => {
-                console.log(result)
                 return result
             })
     )
@@ -41,6 +40,21 @@ export const getTopArtists = () => {
             })
             .catch((error) => {
                 console.log("getTopArtist had an issue, error message: \n", error)
+            })
+    )
+}
+
+export const getRecentlyPlayedPastDay = () => {
+    const day = 86400000
+    const date = new Date()
+
+    return (
+        spotify.getMyRecentlyPlayedTracks({after: date.getTime() - day, limit: 50})
+            .then((result) => {
+                return result
+            })
+            .catch((error) => {
+                console.log("getRecentlyPlayedPastDay had an issue, error message: \n", error)
             })
     )
 }
