@@ -5,6 +5,7 @@ import {spotifyGray} from "../colors";
 
 const RecentlyPlayedComponent = ({ trackObject }) => {
     const track = trackObject.track
+    const playedAt = new Date(trackObject.played_at).toString().slice(15, 24)
 
     const artistsBuilder = () => {
         let artists = track.artists[0].name
@@ -18,13 +19,16 @@ const RecentlyPlayedComponent = ({ trackObject }) => {
     return (
         <View style={styles.recentlyContainer}>
             <View style={styles.track}>
-                <Image style={styles.img} source={track.album.images[0].url}/>
+                <Image style={styles.img} source={track.album.images[0]?.url}/>
                 <View style={styles.trackDetails}>
                     <Text numberOfLines={1} style={styles.trackTitle}>{ track.name }</Text>
                     <Text numberOfLines={1} style={styles.trackArtist}>{ artistsBuilder() }</Text>
                 </View>
             </View>
-            <Image style={styles.recentlyIcon} source={require("../assets/recently.png")}/>
+            <View style={styles.playedAtContainer}>
+                <Image style={styles.recentlyIcon} source={require("../assets/recently.png")}/>
+                <Text style={styles.playedAtText}>{ playedAt }</Text>
+            </View>
         </View>
     )
 }
@@ -41,7 +45,7 @@ const styles = StyleSheet.create({
     track: {
         flexDirection: "row",
         gap: 10,
-        maxWidth: "75%"
+        maxWidth: "65%"
     },
     img: {
         aspectRatio: 1,
@@ -63,10 +67,19 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         fontSize: 12
     },
+    playedAtContainer: {
+        justifyContent: "center",
+        alignItems: "flex-end",
+        gap: 2
+    },
     recentlyIcon: {
         aspectRatio: 1,
-        height: 24,
+        height: 16,
         tintColor: spotifyGray
+    },
+    playedAtText: {
+        color: "white",
+        fontSize: 12
     }
 })
 

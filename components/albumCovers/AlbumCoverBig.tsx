@@ -13,9 +13,8 @@ const AlbumCoverBig = ({ position, plays, artist }) => {
                 <View style={styles.content}>
                     <View style={styles.infoTop}>
                         <Text style={styles.albumOverlay}>#{ position }</Text>
-                        <Text style={styles.albumOverlay}>{ plays }x</Text>
                     </View>
-                    <Text style={[styles.albumOverlay, styles.artistOverlay]}>{ artist.name }</Text>
+                    <Text numberOfLines={1} style={[styles.albumOverlay, styles.artistOverlay]}>{ artist.name }</Text>
                 </View>
             </ImageBackground>
         </View>

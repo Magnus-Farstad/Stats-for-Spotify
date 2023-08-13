@@ -1,4 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
+import {pastDaysSinceDateInMs} from "../composables";
 
 
 let token = null;
@@ -20,9 +21,9 @@ export const getMe = () => {
     )
 }
 
-export const getTopTrack = () => {
+export const getTopTrack = (time_range: string) => {
     return (
-    spotify.getMyTopTracks({limit: 1, time_range: "short_term"})
+    spotify.getMyTopTracks({limit: 1, time_range: time_range})
         .then((result) => {
             return result.items[0]
         })
@@ -32,9 +33,9 @@ export const getTopTrack = () => {
     )
 }
 
-export const getTopArtists = () => {
+export const getTopArtists = (time_range: string) => {
     return (
-        spotify.getMyTopArtists({time_range: "short_term"})
+        spotify.getMyTopArtists({time_range: time_range})
             .then((result) => {
                 return result
             })
@@ -44,12 +45,9 @@ export const getTopArtists = () => {
     )
 }
 
-export const getRecentlyPlayedPastDay = () => {
-    const day = 86400000
-    const date = new Date()
-
+export const getRecentlyPlayed = (after: number) => {
     return (
-        spotify.getMyRecentlyPlayedTracks({after: date.getTime() - day, limit: 50})
+        spotify.getMyRecentlyPlayedTracks({after: after, limit: 50})
             .then((result) => {
                 return result
             })
